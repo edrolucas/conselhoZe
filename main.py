@@ -8,49 +8,50 @@ def obter_conselhos(quantidade): #Define uma função, que recebe como parametro
     conselhos = [] #Cria uma lista vazia para armazenas os conselhos
     for _ in range(quantidade): #Um loop par buscar o numero especifico de conselhos
         resposta = requests.get("https://api.adviceslip.com/advice") #Faz uma requisição HTTP GET a API de conselhos.
-        if resposta.status_code == 200:
-            conselho = json.loads(resposta.text)
-            conselhos.append(conselho["slip"])
+        if resposta.status_code == 200: #Verifica se a requisição foi bem-sucedida
+            conselho = json.loads(resposta.text) #Converte a resposta da API(em JSON) para um dicionario Python
+            conselhos.append(conselho["slip"]) #Adiciona a lista conselhos um dicionario contendo o ID e o texto
         else:
             print("Erro ao acessar a API.")
             return None
-    return conselhos
+    return conselhos #Retorna a lista de conselhos obtidos 
 
 
 # Função para exibir conselhos
-def mostrar_conselhos(conselhos):
+def mostrar_conselhos(conselhos): #Define uma função para exibir os conselhos no terminal
     for conselho in conselhos:
-        print(f"ID: {conselho['id']}, Conselho: {conselho['advice']}")
+        print(f"ID: {conselho['id']}, Conselho: {conselho['advice']}") #Imprime o ID e o texto
 
 
 # Função para salvar conselhos em arquivo
-def salvar_conselhos(conselhos, arquivo="conselhos.txt"):
-    with open(arquivo, "a", encoding="utf-8") as f:
+def salvar_conselhos(conselhos, arquivo="conselhos.txt"): #Define uma função para salvar os conselhos em um arquivo
+    with open(arquivo, "a", encoding="utf-8") as f: #Abre o arquivo no modo de adição"a", garantido que os novos conselhos sejam adicionados sem apagar os existentes
         for conselho in conselhos:
             f.write(f"ID: {conselho['id']}, Conselho: {conselho['advice']}\n")
     print(f"Conselhos salvos no arquivo {arquivo}.")
 
 
 # Função para ler conselhos de um arquivo
-def ler_conselhos(arquivo="conselhos.txt"):
-    try:
-        with open(arquivo, "r", encoding="utf-8") as f:
-            print(f.read())
-    except FileNotFoundError:
-        print("Arquivo não encontrado.")
+def ler_conselhos(arquivo="conselhos.txt"): #Define uma função para ler o conteudo
+    try: 
+        with open(arquivo, "r", encoding="utf-8") as f: #Abre o arquivo em modo leitura "r"
+            print(f.read()) #Lê e exibe o conteúdo do arquivo
+    except FileNotFoundError: #Captura o erro caso o arquivo não exista 
+        print("Arquivo não encontrado.") 
 
 
 # Função para traduzir conselhos
-def traduzir_conselhos(conselhos):
-    conselhos_traduzidos = []
-    for conselho in conselhos:
-        traduzido = GoogleTranslator(source="auto", target="pt").translate(conselho["advice"])
-        conselhos_traduzidos.append({"id": conselho["id"], "advice": traduzido})
+def traduzir_conselhos(conselhos): #Define uma função para traduzir
+    conselhos_traduzidos = [] #Cria uma lista vazia para armazenar os conselhos
+    for conselho in conselhos: 
+        traduzido = GoogleTranslator(source="auto", target="pt").translate(conselho["advice"]) #Tradução
+        conselhos_traduzidos.append({"id": conselho["id"], "advice": traduzido}) #Adiciona o conselho traduzido a lista
     return conselhos_traduzidos
 
 
 # Função principal
-def menu():
+def menu(): #Define a função principal do programa
+    conselhos = [] #Cria uma lista vazia para armazenar os conselhos em memória
     while True:
         print("\n--- MENU ---")
         print("1. Ouvir o Seu Zé BUCETA (Obter Conselhos)")
